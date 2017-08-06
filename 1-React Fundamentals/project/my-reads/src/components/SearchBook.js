@@ -11,7 +11,7 @@ class SearchBook extends Component {
   }
 
   static propTypes = {
-    books: PropTypes.arrayOf(PropTypes.shape({
+    mybooks: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,
       shelf: PropTypes.string.isRequired,
