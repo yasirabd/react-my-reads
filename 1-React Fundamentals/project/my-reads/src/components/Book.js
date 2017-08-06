@@ -5,7 +5,7 @@ class Book extends Component {
   static propTypes = {
     imageURL: PropTypes.object.isRequired,
     title: PropTypes.string.isRequired,
-    author: PropTypes.array.isRequired,
+    author: PropTypes.array,
     shelf: PropTypes.string.isRequired,
     onShelfChange: PropTypes.func.isRequired
   }
