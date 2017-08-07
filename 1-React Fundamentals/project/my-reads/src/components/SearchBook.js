@@ -20,17 +20,16 @@ class SearchBook extends Component {
     })),
     onShelfChange: PropTypes.func.isRequired
   }
-
   updateQuery = (query) => {
       this.setState({query: query.trim()})
       this.searchData(query.trim())
   }
-
   searchData = (data) => {
     if (data.length !== 0) {
-      BooksAPI.search(data, 8).then((books) => {
+      BooksAPI.search(data, 10).then((books) => {
           if(books.length > 0) {
             books = books.filter((book) => book.imageLinks)
+            books = this.mergeData(books, this.props.mybooks)
             this.setState({ books })
           } else {
             this.setState({ books: [] })
@@ -39,6 +38,17 @@ class SearchBook extends Component {
     } else {
       this.setState({books: [], query: ''})
     }
+  }
+  mergeData = (book, Data) => {
+    return book.map((book) => {
+      Data.forEach((Data) => {
+        if(Data.id === book.id) {
+          book.shelf = Data.shelf
+          return
+        }
+      })
+      return book
+    })
   }
 
   render() {

@@ -5,17 +5,12 @@ import { PropTypes } from 'prop-types'
 
 class ListBooks extends Component {
   static propTypes = {
-    books: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      title: PropTypes.string.isRequired,
-      shelf: PropTypes.string.isRequired,
-      imageLinks: PropTypes.object.isRequired,
-      authors: PropTypes.arrayOf(PropTypes.string.isRequired),
-    })),
+    books: PropTypes.array.isRequired,
     onShelfChange: PropTypes.func.isRequired
   }
 
   render() {
+    const { books, onShelfChange } = this.props
     return (
       <div className="list-books">
         <div className="list-books-title">
@@ -25,24 +20,18 @@ class ListBooks extends Component {
           <div>
             <BookShelf
               shelfTitle = "Currently Reading"
-              books = {this.props.books.filter((book) => book.shelf === 'currentlyReading')}
-              onShelfChange = {(id, shelf) => {
-                this.props.onShelfChange(id, shelf)
-              }}
+              books = {books.filter((book) => book.shelf === 'currentlyReading')}
+              onShelfChange = {onShelfChange}
             />
             <BookShelf
               shelfTitle = "Want To Read"
-              books = {this.props.books.filter((book) => book.shelf === 'wantToRead')}
-              onShelfChange = {(id, shelf) => {
-                this.props.onShelfChange(id, shelf)
-              }}
+              books = {books.filter((book) => book.shelf === 'wantToRead')}
+              onShelfChange = {onShelfChange}
             />
             <BookShelf
               shelfTitle = "Read"
-              books = {this.props.books.filter((book) => book.shelf === 'read')}
-              onShelfChange = {(id, shelf) => {
-                this.props.onShelfChange(id, shelf)
-              }}
+              books = {books.filter((book) => book.shelf === 'read')}
+              onShelfChange = {onShelfChange}
             />
           </div>
         </div>

@@ -3,25 +3,20 @@ import { PropTypes } from 'prop-types'
 
 class Book extends Component {
   static propTypes = {
-    imageURL: PropTypes.object.isRequired,
-    title: PropTypes.string.isRequired,
-    author: PropTypes.array,
+    book: PropTypes.object.isRequired,
     shelf: PropTypes.string.isRequired,
     onShelfChange: PropTypes.func.isRequired
   }
 
-  onBookShelfChange = (e) => {
-    const shelf = e.target.value;
-    this.props.onShelfChange(shelf);
-  }
-
   render() {
+    const { book, shelf, onShelfChange } = this.props
+    console.log(book.title + " " + book.shelf)
     return (
       <div className="book">
         <div className="book-top">
-          <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url("${ this.props.imageURL.thumbnail }")` }}></div>
+          <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url("${ book.imageLinks.thumbnail }")` }}></div>
           <div className="book-shelf-changer">
-            <select onChange={this.onBookShelfChange} value={this.props.shelf}>
+            <select onChange={(e) => onShelfChange(book, e.target.value)} value={shelf}>
               <option value="none" disabled>Move to...</option>
               <option value="currentlyReading">Currently Reading</option>
               <option value="wantToRead">Want to Read</option>
@@ -30,11 +25,9 @@ class Book extends Component {
             </select>
           </div>
         </div>
-        <div className="book-title">{this.props.title}</div>
-        {this.props.author && this.props.author.map((author,index) => (
-          <div key={index} className="book-authors">
-            {author}
-          </div>
+        <div className="book-title">{book.title}</div>
+        {book.authors && book.authors.map((author, idx) => (
+            <div key={idx} className="book-authors">{author}</div>
         ))}
       </div>
     )
