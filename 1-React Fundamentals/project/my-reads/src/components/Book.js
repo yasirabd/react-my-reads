@@ -4,7 +4,7 @@ import { PropTypes } from 'prop-types'
 class Book extends Component {
   static propTypes = {
     book: PropTypes.object.isRequired,
-    shelf: PropTypes.string.isRequired,
+    shelf: PropTypes.string,
     onShelfChange: PropTypes.func.isRequired
   }
 
