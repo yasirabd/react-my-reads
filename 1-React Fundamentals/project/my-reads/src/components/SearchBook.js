@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import { PropTypes } from 'prop-types'
 import * as BooksAPI from './../utils/BooksAPI'
-import BookShelf from './BookShelf'
+import Book from './Book'
 
 class SearchBook extends Component {
   state = {
@@ -11,47 +11,34 @@ class SearchBook extends Component {
   }
 
   static propTypes = {
-    mybooks: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      title: PropTypes.string.isRequired,
-      shelf: PropTypes.string.isRequired,
-      imageLinks: PropTypes.object.isRequired,
-      authors: PropTypes.arrayOf(PropTypes.string.isRequired),
-    })),
+    books: PropTypes.array.isRequired,
     onShelfChange: PropTypes.func.isRequired
   }
-  updateQuery = (query) => {
-      this.setState({query: query.trim()})
-      this.searchData(query.trim())
+
+  updateQuery = (event) => {
+    this.setState({query: event.target.value})
+    this.searchBooks(event.target.value.trim())
+    //this.searchBooks(query.trim())
   }
-  searchData = (data) => {
-    if (data.length !== 0) {
-      BooksAPI.search(data, 10).then((books) => {
-          if(books.length > 0) {
-            books = books.filter((book) => book.imageLinks)
-            books = this.mergeData(books, this.props.mybooks)
-            this.setState({ books })
-          } else {
-            this.setState({ books: [] })
-          }
+
+  searchBooks = (query) => {
+    if (query.length !== 0) {
+      BooksAPI.search(query, 5).then((books) => {
+        if(books.length > 0) {
+          this.setState({ books })
+        } else {
+          this.setState({books: []})
+        }
       })
     } else {
       this.setState({books: [], query: ''})
     }
   }
-  mergeData = (book, Data) => {
-    return book.map((book) => {
-      Data.forEach((Data) => {
-        if(Data.id === book.id) {
-          book.shelf = Data.shelf
-          return
-        }
-      })
-      return book
-    })
-  }
 
   render() {
+    const { onShelfChange } = this.props
+    const { query, books } = this.state
+
     return (
       <div>
         <div className="search-books">
@@ -61,24 +48,21 @@ class SearchBook extends Component {
               <input
                 type="text"
                 placeholder="Search by title or author"
-                value={this.state.query}
-                onChange={(event) => this.updateQuery(event.target.value)}
+                value={query}
+                onChange={this.updateQuery}
               />
             </div>
           </div>
           <div className="search-books-results">
-            <ol className="books-grid"></ol>
+            <ol className="books-grid">
+              {books.map((result) => (
+                <li key={result.id}>
+                  <Book book={result} shelf={result.shelf} onShelfChange={onShelfChange}/>
+                </li>
+              ))}
+            </ol>
           </div>
         </div>
-        {this.state.query !== '' && this.state.books.length > 0 &&
-          (<BookShelf
-            shelfTitle="Search Result"
-            books={this.state.books}
-            onShelfChange={(id, shelf) => {
-              this.props.onShelfChange(id, shelf)
-            }}
-          />)
-        }
       </div>
     )
   }

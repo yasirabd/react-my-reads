@@ -19,7 +19,12 @@ class BooksApp extends React.Component {
       this.componentDidMount()
     })
   }
-
+  // searchBooks = (query) => {
+  //   BooksAPI.search(query, 10).then((searchResults) => {
+  //     console.log(searchResults)
+  //     this.setState({ searchResults })
+  //   })
+  // }
   render() {
     const { books } = this.state
     return (
@@ -32,7 +37,7 @@ class BooksApp extends React.Component {
         )}/>
         <Route path='/search' render={({ history }) => (
           <SearchBook
-            mybooks={books}
+            books = {books}
             onShelfChange={this.shelfChange}
           />
         )}/>
