@@ -23,10 +23,15 @@ class SearchBook extends Component {
   searchBooks = (query) => {
     if (query.length !== 0) {
       BooksAPI.search(query, 20).then((books) => {
-        if(books.length > 0) {
+        if(!books.error) {
           books = books.filter((book) => book.imageLinks)
-          books = this.verifiedBooks(books, this.props.currentBooks)
-          this.setState({ searchResults: books })
+          this.setState((prevState) => {
+            books.map((book) => {
+              let index = this.props.currentBooks.findIndex((e) => e.id === book.id)
+              book.shelf = (index > -1) ? this.props.currentBooks[index].shelf: "none"
+            })
+            return { searchResults: books }
+          })
         } else {
           this.setState({searchResults: []})
         }
@@ -34,17 +39,6 @@ class SearchBook extends Component {
     } else {
       this.setState({searchResults: [], query: ''})
     }
-  }
-
-  verifiedBooks = (listBooksSearch, listBooks) => {
-    return listBooksSearch.map((book) => {
-      listBooks.forEach((bookOnShelf) => {
-            if (book.id === bookOnShelf.id) {
-              book.shelf = bookOnShelf.shelf
-            }
-      })
-      return book
-    })
   }
 
   render() {
