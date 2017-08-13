@@ -6,12 +6,12 @@ import Book from './Book'
 
 class SearchBook extends Component {
   state = {
-    books: [],
+    searchResults: [],
     query: ''
   }
 
   static propTypes = {
-    books: PropTypes.array.isRequired,
+    currentBooks: PropTypes.array.isRequired,
     onShelfChange: PropTypes.func.isRequired
   }
 
@@ -24,32 +24,31 @@ class SearchBook extends Component {
     if (query.length !== 0) {
       BooksAPI.search(query, 20).then((books) => {
         if(books.length > 0) {
-          books = this.bookInShelf(books, this.props.books)
-          this.setState({ books })
+          books = this.verifiedBooks(books, this.props.currentBooks)
+          this.setState({ searchResults: books })
         } else {
-          this.setState({books: []})
+          this.setState({searchResults: []})
         }
       })
     } else {
-      this.setState({books: [], query: ''})
+      this.setState({searchResults: [], query: ''})
     }
   }
 
-  bookInShelf = (recentBooks, oldBooks) => {
-    return recentBooks.map((recent) => {
-      oldBooks.forEach((old) => {
-        if (old.id === recent.id) {
-          recent.shelf = old.shelf
-          return
+  verifiedBooks = (listBooksSearch, listBooks) => {
+    return listBooksSearch.map((book) => {
+      listBooks.forEach((bookOnShelf) => {
+        if (book.id === bookOnShelf.id) {
+          book.shelf = bookOnShelf.shelf
         }
       })
-      return recent
+      return book
     })
   }
 
   render() {
     const { onShelfChange } = this.props
-    const { query, books } = this.state
+    const { query, searchResults } = this.state
 
     return (
       <div>
@@ -67,7 +66,7 @@ class SearchBook extends Component {
           </div>
           <div className="search-books-results">
             <ol className="books-grid">
-              {query !== '' && books.map((result) => (
+              {query !== '' && searchResults.map((result) => (
                 <li key={result.id}>
                   <Book book={result} shelf={result.shelf} onShelfChange={onShelfChange}/>
                 </li>

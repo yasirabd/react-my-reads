@@ -37,7 +37,7 @@ class BooksApp extends React.Component {
         )}/>
         <Route path='/search' render={({ history }) => (
           <SearchBook
-            books = {books}
+            currentBooks = {books}
             onShelfChange={this.shelfChange}
           />
         )}/>
