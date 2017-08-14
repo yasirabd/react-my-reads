@@ -11,10 +11,14 @@ class BooksApp extends React.Component {
   }
 
   componentDidMount() {
+    this.fetchAllBooks()
+  }
+
+  fetchAllBooks() {
     BooksAPI.getAll().then((books) => this.setState({ books }))
   }
 
-  shelfChange = (updatedBook, shelf) => {
+  changeShelf = (updatedBook, shelf) => {
     BooksAPI.update(updatedBook, shelf).then(() => {
       this.setState(state => {
         let currentBooks = []
@@ -43,13 +47,13 @@ class BooksApp extends React.Component {
         <Route exact path='/' render={() => (
           <ListBooks
             books={books}
-            onShelfChange={this.shelfChange}
+            onShelfChange={this.changeShelf}
           />
         )}/>
         <Route path='/search' render={({ history }) => (
           <SearchBook
             currentBooks = {books}
-            onShelfChange={this.shelfChange}
+            onShelfChange={this.changeShelf}
           />
         )}/>
       </div>

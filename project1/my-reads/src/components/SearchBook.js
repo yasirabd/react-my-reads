@@ -18,6 +18,7 @@ class SearchBook extends Component {
   updateQuery = (event) => {
     this.setState({query: event.target.value})
     this.searchBooks(event.target.value.trim())
+    //this.setState({searchResults: this.searchBooks(event.target.value.trim())})
   }
 
   searchBooks = (query) => {
@@ -41,8 +42,14 @@ class SearchBook extends Component {
     })
   }
 
+  changeShelf = (updatedBook, shelf) =>  {
+    const completedBook = this.state.searchResults.find(book => book.id === updatedBook.id)
+    if (completedBook) {
+      this.props.onShelfChange(completedBook, shelf)
+    }
+  }
+
   render() {
-    const { onShelfChange } = this.props
     const { query, searchResults } = this.state
 
     return (
@@ -63,7 +70,7 @@ class SearchBook extends Component {
             <ol className="books-grid">
               {query !== '' && searchResults.map((result) => (
                 <li key={result.id}>
-                  <Book book={result} shelf={result.shelf} onShelfChange={onShelfChange}/>
+                  <Book book={result} shelf={result.shelf} onShelfChange={this.changeShelf}/>
                 </li>
               ))}
             </ol>
