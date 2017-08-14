@@ -15,17 +15,15 @@ class BooksApp extends React.Component {
   }
 
   shelfChange = (updatedBook, shelf) => {
-    BooksAPI.update(updatedBook, shelf).then(result => {
+    BooksAPI.update(updatedBook, shelf).then(() => {
       this.setState(state => {
         let currentBooks = []
-        const alreadyOnShelf = this.state.books.find(book => book.id === updatedBook.id)
+        const alreadyOnShelf = state.books.find(book => book.id === updatedBook.id)
 
         if (alreadyOnShelf) {
           currentBooks = state.books.map(book => {
             if (book.id === updatedBook.id) {
               book.shelf = shelf
-            } else {
-              book.shelf = "none"
             }
             return book
           })
@@ -33,7 +31,7 @@ class BooksApp extends React.Component {
           updatedBook.shelf = shelf
           currentBooks = state.books.concat([updatedBook])
         }
-        return { books: currentBooks };
+        return {books: currentBooks}
       })
     })
   }
