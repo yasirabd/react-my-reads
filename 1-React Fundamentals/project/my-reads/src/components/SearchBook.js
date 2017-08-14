@@ -25,13 +25,12 @@ class SearchBook extends Component {
       BooksAPI.search(query, 20).then((books) => {
         if(!books.error) {
           books = books.filter((book) => book.imageLinks)
-          this.setState((prevState) => {
-            books.map((book) => {
-              let index = this.props.currentBooks.findIndex((e) => e.id === book.id)
-              book.shelf = (index > -1) ? this.props.currentBooks[index].shelf: "none"
-            })
-            return { searchResults: books }
+          books.map((book) => {
+            let index = this.props.currentBooks.findIndex((e) => e.id === book.id)
+            book.shelf = (index > -1) ? this.props.currentBooks[index].shelf: "none"
+            return book
           })
+          this.setState({ searchResults: books })
         } else {
           this.setState({searchResults: []})
         }
