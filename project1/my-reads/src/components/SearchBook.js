@@ -12,45 +12,68 @@ class SearchBook extends Component {
 
   static propTypes = {
     currentBooks: PropTypes.array.isRequired,
+    handler: PropTypes.func.isRequired,
     onShelfChange: PropTypes.func.isRequired
   }
 
-  updateQuery = (event) => {
-    this.setState({query: event.target.value})
-    this.searchBooks(event.target.value.trim())
-    //this.setState({searchResults: this.searchBooks(event.target.value.trim())})
+  updateQuery = (query) => {
+    this.setState({query})
+    this.searchBooks(query.trim())
   }
 
   searchBooks = (query) => {
     query && BooksAPI.search(query, 20).then((books) => {
       if (!books.error) {
         books = books.filter((book) => book.imageLinks)
-        this.setState({
-          searchResults: books.map(book => {
-            const alreadyOnShelf = this.props.currentBooks.find(currentBook => currentBook.id === book.id)
-            if (alreadyOnShelf) {
-              book.shelf = alreadyOnShelf.shelf
-            } else {
-              book.shelf = "none"
-            }
-            return book
-          })
+        books.map(book => {
+          const alreadyOnShelf = this.props.currentBooks.find(currentBook => currentBook.id === book.id)
+          book.shelf = "none"
+          if (alreadyOnShelf){
+            book.shelf = alreadyOnShelf.shelf
+          }
+          return book
         })
+        this.setState({searchResults: books})
       } else {
         this.setState({searchResults: []})
       }
     })
   }
 
-  changeShelf = (updatedBook, shelf) =>  {
-    const completedBook = this.state.searchResults.find(book => book.id === updatedBook.id)
-    if (completedBook) {
-      this.props.onShelfChange(completedBook, shelf)
+  changeShelf = (book, shelf) =>  {
+    const {currentBooks} = this.props
+    BooksAPI.update(book, shelf)
+    currentBooks.forEach((item) => {
+      if (item.id === book.id){
+        item.shelf = shelf
+      }
+    })
+    if (book.shelf === "none"){
+      var newBook = currentBooks.concat(book)
+      this.props.handler(newBook)
+    } else {
+      this.props.handler(currentBooks)
     }
+    var searchBooks = this.state.searchResults
+    searchBooks.forEach((item) => {
+      if (item.id === book.id){
+        item.shelf = shelf
+      }
+    })
+    this.setState({searchResults: searchBooks})
   }
 
   render() {
     const { query, searchResults } = this.state
+    const displayBooks = searchResults.map(book => (
+      <li key={book.id}>
+        <Book
+          book={book}
+          shelf={book.shelf}
+          onShelfChange={this.changeShelf.bind(this)}
+        />
+      </li>
+    ))
 
     return (
       <div>
@@ -62,17 +85,13 @@ class SearchBook extends Component {
                 type="text"
                 placeholder="Search by title or author"
                 value={query}
-                onChange={this.updateQuery}
+                onChange={(e) => this.updateQuery(e.target.value)}
               />
             </div>
           </div>
           <div className="search-books-results">
             <ol className="books-grid">
-              {query !== '' && searchResults.map((result) => (
-                <li key={result.id}>
-                  <Book book={result} shelf={result.shelf} onShelfChange={this.changeShelf}/>
-                </li>
-              ))}
+              {query !== '' && displayBooks}
             </ol>
           </div>
         </div>

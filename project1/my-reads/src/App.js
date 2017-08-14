@@ -23,7 +23,6 @@ class BooksApp extends React.Component {
       this.setState(state => {
         let currentBooks = []
         const alreadyOnShelf = state.books.find(book => book.id === updatedBook.id)
-
         if (alreadyOnShelf) {
           currentBooks = state.books.map(book => {
             if (book.id === updatedBook.id) {
@@ -39,7 +38,9 @@ class BooksApp extends React.Component {
       })
     })
   }
-
+  handler = (books) => {
+    this.setState({books})
+  }
   render() {
     const { books } = this.state
     return (
@@ -52,7 +53,8 @@ class BooksApp extends React.Component {
         )}/>
         <Route path='/search' render={({ history }) => (
           <SearchBook
-            currentBooks = {books}
+            currentBooks={books}
+            handler={this.handler.bind(this)}
             onShelfChange={this.changeShelf}
           />
         )}/>
