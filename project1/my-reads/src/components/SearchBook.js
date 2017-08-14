@@ -22,8 +22,12 @@ class SearchBook extends Component {
 
   searchBooks = (query) => {
     query && BooksAPI.search(query, 20).then((books) => {
-      books = books.filter((book) => book.imageLinks)
-      this.setState({searchResults: books})
+      if (!books.error) {
+        books = books.filter((book) => book.imageLinks)
+        this.setState({searchResults: books})
+      } else {
+        this.setState({searchResults: []})
+      }
     })
   }
 
