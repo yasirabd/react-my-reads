@@ -10,11 +10,15 @@ class Book extends Component {
 
   render() {
     const { book, shelf, onShelfChange } = this.props
-    console.log(book.title + " " + book.shelf)
+    const imageLinks = book.imageLinks.thumbnail
     return (
       <div className="book">
         <div className="book-top">
-          <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url("${ book.imageLinks.thumbnail }")` }}></div>
+          <div className="book-cover" style={{
+            width: 128,
+            height: 193,
+            backgroundImage: `url("${imageLinks}")` }}>
+          </div>
           <div className="book-shelf-changer">
             <select onChange={(e) => onShelfChange(book, e.target.value)} value={shelf}>
               <option value="none" disabled>Move to...</option>
@@ -26,9 +30,7 @@ class Book extends Component {
           </div>
         </div>
         <div className="book-title">{book.title}</div>
-        {book.authors && book.authors.map((author, idx) => (
-            <div key={idx} className="book-authors">{author}</div>
-        ))}
+        <div className="book-authors">{book.authors ? book.authors.join(', '): ''}</div>
       </div>
     )
   }
