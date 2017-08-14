@@ -10,14 +10,14 @@ class Book extends Component {
 
   render() {
     const { book, shelf, onShelfChange } = this.props
-    const imageLinks = book.imageLinks.thumbnail
+    const thumbnail = book.imageLinks.thumbnail
     return (
       <div className="book">
         <div className="book-top">
           <div className="book-cover" style={{
             width: 128,
             height: 193,
-            backgroundImage: `url("${imageLinks}")` }}>
+            backgroundImage: `url("${thumbnail}")` }}>
           </div>
           <div className="book-shelf-changer">
             <select onChange={(e) => onShelfChange(book, e.target.value)} value={shelf}>

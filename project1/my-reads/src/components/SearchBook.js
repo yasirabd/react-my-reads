@@ -23,8 +23,17 @@ class SearchBook extends Component {
   searchBooks = (query) => {
     query && BooksAPI.search(query, 20).then((books) => {
       if (!books.error) {
-        books = books.filter((book) => book.imageLinks)
-        this.setState({searchResults: books})
+        this.setState({
+          searchResults: books.map(book => {
+            const alreadyOnShelf = this.props.currentBooks.find(currentBook => currentBook.id === book.id)
+            if (alreadyOnShelf) {
+              book.shelf = alreadyOnShelf.shelf
+            } else {
+              book.shelf = "none"
+            }
+            return book
+          })
+        })
       } else {
         this.setState({searchResults: []})
       }
