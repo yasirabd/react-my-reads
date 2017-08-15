@@ -41,25 +41,31 @@ class SearchBook extends Component {
   }
 
   changeShelf = (book, shelf) =>  {
-    const {currentBooks} = this.props
+    const {currentBooks, handler} = this.props
+    const {searchResults} = this.state
+
     BooksAPI.update(book, shelf)
+
     currentBooks.forEach((item) => {
       if (item.id === book.id){
         item.shelf = shelf
       }
     })
+
     if (book.shelf === "none"){
-      var newBook = currentBooks.concat(book)
-      this.props.handler(newBook)
+      let newBook = currentBooks.concat(book)
+      handler(newBook)
     } else {
-      this.props.handler(currentBooks)
+      handler(currentBooks)
     }
-    var searchBooks = this.state.searchResults
+
+    let searchBooks = searchResults
     searchBooks.forEach((item) => {
       if (item.id === book.id){
         item.shelf = shelf
       }
     })
+
     this.setState({searchResults: searchBooks})
   }
 
@@ -70,7 +76,7 @@ class SearchBook extends Component {
         <Book
           book={book}
           shelf={book.shelf}
-          onShelfChange={this.changeShelf.bind(this)}
+          onShelfChange={this.changeShelf}
         />
       </li>
     ))

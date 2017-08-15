@@ -54,7 +54,7 @@ class BooksApp extends React.Component {
         <Route path='/search' render={({ history }) => (
           <SearchBook
             currentBooks={books}
-            handler={this.handler.bind(this)}
+            handler={this.handler}
             onShelfChange={this.changeShelf}
           />
         )}/>
