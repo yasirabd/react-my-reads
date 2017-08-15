@@ -9,8 +9,9 @@ class Book extends Component {
   }
 
   render() {
-    const { book, shelf, onShelfChange } = this.props
+    const {book, shelf, onShelfChange} = this.props
     const thumbnail = book.imageLinks.thumbnail
+    
     return (
       <div className="book">
         <div className="book-top">

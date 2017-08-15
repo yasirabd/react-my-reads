@@ -5,15 +5,15 @@ import * as BooksAPI from './../utils/BooksAPI'
 import Book from './Book'
 
 class SearchBook extends Component {
-  state = {
-    searchResults: [],
-    query: ''
-  }
-
   static propTypes = {
     currentBooks: PropTypes.array.isRequired,
     handler: PropTypes.func.isRequired,
     onShelfChange: PropTypes.func.isRequired
+  }
+
+  state = {
+    searchResults: [],
+    query: ''
   }
 
   updateQuery = (query) => {

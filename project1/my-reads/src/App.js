@@ -2,7 +2,7 @@ import React from 'react'
 import { Route } from 'react-router-dom'
 import * as BooksAPI from './utils/BooksAPI'
 import ListBooks from './components/ListBooks'
-import SearchBook from './components/SearchBook'
+import SearchBooks from './components/SearchBooks'
 import './App.css'
 
 class BooksApp extends React.Component {
@@ -38,11 +38,13 @@ class BooksApp extends React.Component {
       })
     })
   }
+
   handler = (books) => {
     this.setState({books})
   }
+
   render() {
-    const { books } = this.state
+    const {books} = this.state
     return (
       <div className="app">
         <Route exact path='/' render={() => (
@@ -52,7 +54,7 @@ class BooksApp extends React.Component {
           />
         )}/>
         <Route path='/search' render={({ history }) => (
-          <SearchBook
+          <SearchBooks
             currentBooks={books}
             handler={this.handler}
             onShelfChange={this.changeShelf}
